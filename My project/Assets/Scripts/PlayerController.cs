@@ -13,6 +13,9 @@ public class PlayerController
     private bool down;
     private bool left;
 
+    public float mouseSensitivity = 100f;
+    
+
     //CONSTRUCTOR
 
     public PlayerController (GameObject player)
@@ -34,7 +37,27 @@ public class PlayerController
 
         int inputCount = 0;
         Vector3 direction = new Vector3(0,0,0);
-        int speed = 10;
+        int speed = 7;
+
+        // dont act on opposing inputs 
+        //this need to be here to avoid using the diagonal imput code 
+        //when it is not needed, it seems to work but when pressing left and right
+        //you can only go back and with up and down you can only go right
+        //i have no clue why this is, please help 
+
+
+
+        if(up && down) 
+        {
+            up = false; 
+            down = false;
+        }
+        
+        if(right && left) 
+        {
+            right = false; 
+            left = false;
+        }
 
         if (up) inputCount++;
         if (right) inputCount++;
@@ -42,20 +65,15 @@ public class PlayerController
         if (left) inputCount++;
 
 
-
-
         if (inputCount > 1) 
         {
-            // dont act on opposing inputs 
-            // need a new solution to this 
-            //if(up && down) up = false; down = false;
-            //if(right && left) right = false; left = false;
+
 
             // generate diagonal direction "unit vector"
-            if (up) direction = direction + new Vector3 (Mathf.Sqrt(.5f),0,0);
-            if (right) direction = direction + new Vector3 (0,0,-Mathf.Sqrt(.5f));
-            if (down) direction = direction + new Vector3 (-Mathf.Sqrt(.5f),0,0);
-            if (left) direction = direction + new Vector3 (0,0,Mathf.Sqrt(.5f));
+            if (up) direction = direction + new Vector3 (0,0,Mathf.Sqrt(.5f));
+            if (right) direction = direction + new Vector3 (Mathf.Sqrt(.5f),0,0);
+            if (down) direction = direction + new Vector3 (0,0,-Mathf.Sqrt(.5f));
+            if (left) direction = direction + new Vector3 (Mathf.Sqrt(.5f),0,0);
 
             playerObject.transform.Translate(direction * speed * Time.deltaTime);
             Debug.Log("move");
@@ -64,16 +82,18 @@ public class PlayerController
         } 
         else
         {
-            if (up) direction = direction + new Vector3 (1,0,0);
-            if (right) direction = direction + new Vector3 (0,0,-1);
-            if (down) direction = direction + new Vector3 (-1,0,0);
-            if (left) direction = direction + new Vector3 (0,0,1);
+            if (up) direction = direction + new Vector3 (0,0,1);
+            if (right) direction = direction + new Vector3 (1,0,0);
+            if (down) direction = direction + new Vector3 (0,0,-1);
+            if (left) direction = direction + new Vector3 (-1,0,0);
 
             playerObject.transform.Translate(direction * speed * Time.deltaTime);
             Debug.Log("move straight");
         }
 
     }
+
+
 
 
 
