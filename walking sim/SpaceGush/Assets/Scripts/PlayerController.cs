@@ -1,0 +1,146 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+
+
+
+public class PlayerController
+{
+    private GameObject playerObject;
+    private bool up;
+    private bool right;
+    private bool down;
+    private bool left;
+
+    public float mouseSensitivity = 100f;
+    
+
+    //CONSTRUCTOR
+
+    public PlayerController (GameObject player)
+    {
+        playerObject = player;
+
+        up = false;
+        right = false;
+        down = false;
+        left = false;
+
+    }
+
+    //MOVMENT CONTROLER
+
+    public void Move()
+    {
+        //prevent charecter from faling over when coliding 
+        //this doesnt actually work becaoue unity physics is made by squirrels
+        // I need a way to reset the angle of the object on to axises to a specific position 
+        //I can and probaly will do this but for now the charecter "gets dizzy" when it runs into stuff  
+        Rigidbody rb= playerObject.GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotationX;
+        rb.constraints = RigidbodyConstraints.FreezeRotationZ;
+        
+
+        CheckInput();
+
+        int inputCount = 0;
+        Vector3 direction = new Vector3(0,0,0);
+        int speed = 7;
+
+        // dont act on opposing inputs 
+        //this need to be here to avoid using the diagonal input code 
+        //when it is not needed, it seems to work but when pressing left and right
+        //you can only go back and with up and down you can only go right
+        //i have no clue why this is, please help 
+
+        if(up && down) 
+        {
+            up = false; 
+            down = false;
+        }
+        
+        if(right && left) 
+        {
+            right = false; 
+            left = false;
+        }
+
+        if (up) inputCount++;
+        if (right) inputCount++;
+        if (down) inputCount++;
+        if (left) inputCount++;
+
+
+        if (inputCount > 1) 
+        {
+
+
+            // generate diagonal direction "unit vector"
+            if (up) direction = direction + new Vector3 (0,0,Mathf.Sqrt(.5f));
+            if (right) direction = direction + new Vector3 (Mathf.Sqrt(.5f),0,0);
+            if (down) direction = direction + new Vector3 (0,0,-Mathf.Sqrt(.5f));
+            if (left) direction = direction + new Vector3 (Mathf.Sqrt(.5f),0,0);
+
+            playerObject.transform.Translate(direction * speed * Time.deltaTime);
+            Debug.Log("move");
+            
+
+        } 
+        else
+        {
+            if (up) direction = direction + new Vector3 (0,0,1);
+            if (right) direction = direction + new Vector3 (1,0,0);
+            if (down) direction = direction + new Vector3 (0,0,-1);
+            if (left) direction = direction + new Vector3 (-1,0,0);
+
+            playerObject.transform.Translate(direction * speed * Time.deltaTime);
+            Debug.Log("move straight");
+        }
+
+    }
+
+
+
+
+
+
+    // INPUTS
+
+    private void CheckInput()
+    {
+        CheckUp();
+        CheckRight();
+        CheckDown();
+        CheckLeft();
+
+    }
+
+    private void CheckUp()
+    {
+        up = Input.GetKey(KeyCode.W);
+    }
+
+    private void CheckRight()
+    {
+        right = Input.GetKey(KeyCode.D);
+    }
+
+    private void CheckDown()
+    {
+        down = Input.GetKey(KeyCode.S);
+    }
+
+    private void CheckLeft()
+    {
+        left = Input.GetKey(KeyCode.A);
+    }
+
+    //SOUNDS
+
+    //SPECIAL COLISTION CHECKS
+
+
+
+    
+}
