@@ -14,6 +14,10 @@ public class Table
     private int columns;
     private int rows;
 
+    private const float posX = 0;
+    private const float posY = 0;
+    private const float offset = 2;
+
     private float turnTime;
     private int sight;
     private int hp;
@@ -27,10 +31,8 @@ public class Table
     public Table(Canvas canvass)
     {
        canvas  = canvass;
-       board = new card[rows, columns];
-       float posX = 0;
-       float posY = 0;
-       float offset = 2;
+       board = new Card[rows, columns];
+
        gameOver  = false;
 
        Card tempCard = null;
@@ -41,7 +43,7 @@ public class Table
        turnTime = 5;
        hp = 100;
        score = 0;
-       nulti = 1;
+       multi = 1;
        sight = 1;
 
        tableDeck = new Deck(canvas);
@@ -51,9 +53,9 @@ public class Table
         {
             for(int r = 0; r < columns; r++)
             {
-                tempCard = tableDeck.deal;
+                tempCard = tableDeck.deal();
                 board[r,c] = tempCard;
-                tempCard.getGO().transform.position = new Vector3((posX + offset * c)f, 0 ,(posY + offset * c)f);
+                tempCard.getGO().transform.position = new Vector3((posX + offset * c), 0 ,(posY + offset * c));
                 
             }
         }
@@ -90,16 +92,16 @@ public class Table
                         
                         if (cardsClicked > sight)
                         {
-                            if(board[tRow,tcolumn].type ==  board[r,c].type)
+                            if(board[tRow,tColumn].Type() ==  board[r,c].Type())
                             {
-                                switch(board[r,c].type)
+                                switch(board[r,c].Type())
                                 {
                                     case 1:
-                                        hp += (board[tRow,tcolumn].number + board[r,c].number) * multi;
+                                        hp += (board[tRow,tColumn].Number() + board[r,c].Number()) * multi;
                                     break;
 
                                     case 2:
-                                        multi += (board[tRow,tcolumn].number + board[r,c].number);
+                                        multi += (board[tRow,tColumn].Number() + board[r,c].Number());
                                     break;
 
                                     default:
@@ -107,10 +109,10 @@ public class Table
                                     break;
                                 } 
 
-                                board[tRow,tcolumn].getGO.transform.position = discard;
-                                board[r,c].getGO.transform.position = discard;
+                                board[tRow,tColumn].getGO().transform.position = discard;
+                                board[r,c].getGO().transform.position = discard;
 
-                                board[tRow,tcolumn]=null;
+                                board[tRow,tColumn]=null;
                                 board[r,c]=null;
 
                                 score += 100 * multi;
@@ -156,9 +158,9 @@ public class Table
 
                 if(board[r,c] == null)
                 {
-                    board[r,c] == board[r-1,c];
-                    board[r-1,c] == null;
-                    board[r,c].getGO().transform.position = new Vector3((posX + offset * c)f, 0 ,(posY + offset * c)f);
+                    board[r,c] = board[r-1,c];
+                    board[r-1,c] = null;
+                    board[r,c].getGO().transform.position = new Vector3((posX + offset * c), 0 ,(posY + offset * c));
                     r = r-2;
                 }
 
@@ -173,7 +175,7 @@ public class Table
                 if(board[r,c] == null)
                 {
                     board[r,c] = tableDeck.deal();
-                    board[r,c].getGO().transform.position = new Vector3((posX + offset * c)f, 0 ,(posY + offset * c)f);
+                    board[r,c].getGO().transform.position = new Vector3((posX + offset * c), 0 ,(posY + offset * c));
                 }
 
             }

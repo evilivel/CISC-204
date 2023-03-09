@@ -10,11 +10,11 @@ public class Main : MonoBehaviour
     public Canvas canvas;
     public Table currentTable;
     public bool GameEnded;
+
     public bool Win1;
     public bool Win2;
 
 
-    
     public GameObject winMenu;
     public GameObject loseMenu;
 
@@ -25,17 +25,16 @@ public class Main : MonoBehaviour
         GameEnded = false;
         canvas = gameObject.GetComponent<Canvas>();
         currentTable = new Table(canvas);
-        //StartCoroutine(AI());
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
       
-      currentTable.player1Play();
+      currentTable.turncheck();
       
-      if(currentTable.checkGameOver(ref Win1,ref Win2) == true)
+      if(currentTable.checkGameOver(ref Win1) == true)
       {
         //Debug.Log("Game Over");
         GameEnded = true;

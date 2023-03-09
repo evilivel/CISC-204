@@ -18,8 +18,8 @@ public class Card
 
 
     //These arrays of the posible shapes and colors gives me more options for constructors 
-    private string[] types = new string[6] {"nohat", "partyhat", "crown", "tophat", "sombrero", "propellerhat"};
-    private string[] numbers = new string[6] {"single", "double", "triple", "four", "five",""};
+    private string[] types = new string[6] {"hp", "multi", "empty", "empty", "empty", "empty"};
+    private string[] numbers = new string[6] {"1", "2", "3", "10", "20","30"};
 
     
     
@@ -85,7 +85,13 @@ public class Card
 
                 if (numbers[a] == i)
                 {
-                    number = a;
+                    number = int.Parse(numbers[a]);
+                    /*
+                    if(words[i+1] == "-")
+                    {
+                        number = number * -1;
+                    }
+                    */
                 }
 
             }
@@ -122,18 +128,7 @@ public class Card
 
     //MAIN CARD METHODS
 
-    public bool CompCard (Card tcard)
-    {
-        if(color == tcard.Color() || shape == tcard.Shape() || number == tcard.Number())
-        {
-            return(true);
-        }
-        else
-        {
-            return(false);
-        }
 
-    }
 
 
 
@@ -141,11 +136,7 @@ public class Card
 
     //GET / SET METHODS
 
-    //returns card value
-    public int number()
-    {
-        return (number);
-    }
+
 
 
     //returns game object
@@ -163,16 +154,13 @@ public class Card
 
     // return color of card
 
-    public int Color()
-    {
-        return (color);
-    }
+
     
     //return shape of card
 
-    public int Shape()
+    public int Type()
     {
-        return (shape);
+        return (type);
     }
 
     //return number of card
