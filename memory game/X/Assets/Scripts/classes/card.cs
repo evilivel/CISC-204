@@ -12,7 +12,7 @@ public class Card
     private int type;
     private int number;
 
-
+    private GameObject back;
     private GameObject GO;
     private bool buttonPressed;
 
@@ -80,20 +80,21 @@ public class Card
             {
                 if (types[a] == i)
                 {
-                    type = a;
+                    type = a+1;
                 }
 
                 if (numbers[a] == i)
                 {
                     number = int.Parse(numbers[a]);
-                    /*
-                    if(words[i+1] == "-")
-                    {
-                        number = number * -1;
-                    }
-                    */
                 }
 
+            }
+            if(i == "-")
+            {
+                
+                number = -number;
+                Debug.Log(number);
+                break;
             }
         }
 
@@ -111,13 +112,17 @@ public class Card
         trans.transform.SetParent(canvas.transform); // setting parent
         trans.localScale = Vector3.one;
         trans.anchoredPosition = new Vector2(0f, 0f); // setting position, will be on center
-        trans.sizeDelta= new Vector2(125, 175); // custom size
+        trans.sizeDelta= new Vector2(115, 155); // custom size
         trans.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
         Image image = imgObject.AddComponent<Image>();
         Texture2D tex = (Texture2D)texture;
         image.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
         imgObject.transform.SetParent(canvas.transform);
+
+       
+
+        back = imgObject;
 
         GO = imgObject;
 
@@ -152,8 +157,16 @@ public class Card
         return(buttonPressed);
     }
 
-    // return color of card
+    public void Back(Object texture)
+    {
+        Image image = back.GetComponent<Image>();
+        Texture2D tex = (Texture2D)texture;
+        image.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
 
+        //GO.SetActive(false);
+        //back.SetActive(true);
+    }
+    
 
     
     //return shape of card
@@ -175,17 +188,25 @@ public class Card
     {
         if (buttonPressed == true)
         {
+            System.Threading.Thread.Sleep(1000);
             buttonPressed = false;
+            //GO.SetActive(false);
+            back.SetActive(true);
         }
         else
         {
             buttonPressed = true;
+            Debug.Log(number);
+
+            back.SetActive(false);
+            
         }
     }
 
-        void TaskOnClick()
+    void TaskOnClick()
     {
         ButtonFlip();
+
         //Debug.Log("You have clicked the button!");
     }
 

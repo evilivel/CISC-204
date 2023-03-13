@@ -14,9 +14,9 @@ public class Table
     private int columns;
     private int rows;
 
-    private const float posX = 0;
-    private const float posY = 0;
-    private const float offset = 2;
+    private const float posX = -1.5f;
+    private const float posY = -.5f;
+    private const float offset = 1.2f;
 
     private float turnTime;
     private int sight;
@@ -28,34 +28,33 @@ public class Table
 
 
 
-    public Table(Canvas canvass)
+    public Table(Canvas canvass, Object texture)
     {
-       canvas  = canvass;
-       board = new Card[rows, columns];
+        columns = 5;
+        rows = 4;
+        canvas  = canvass;
+        board = new Card[rows, columns];
 
-       gameOver  = false;
+        gameOver  = false;
 
-       Card tempCard = null;
+        Card tempCard = null;
 
-       columns = 5;
-       rows = 4;
+        turnTime = 5;
+        hp = 100;
+        score = 0;
+        multi = 1;
+        sight = 1;
 
-       turnTime = 5;
-       hp = 100;
-       score = 0;
-       multi = 1;
-       sight = 1;
-
-       tableDeck = new Deck(canvas);
+       tableDeck = new Deck(canvas,texture);
         
         //NEED TP LOAD CARDS IN TO ARRAY FROM DECK AND MOVE THE GAMEOBJECT ONTO FIELD 
-        for(int c = 0; c < rows; c++)
+        for(int r = 0; r < rows; r++)
         {
-            for(int r = 0; r < columns; r++)
+            for(int c = 0; c < columns; c++)
             {
                 tempCard = tableDeck.deal();
                 board[r,c] = tempCard;
-                tempCard.getGO().transform.position = new Vector3((posX + offset * c), 0 ,(posY + offset * c));
+                tempCard.getGO().transform.position = new Vector3((posY + offset * c), 0 ,(posX + offset * r));
                 
             }
         }
@@ -75,7 +74,7 @@ public class Table
         int tColumn = 0;
         int cardsClicked = 0;
 
-        Vector3 discard = new Vector3 (0,0,0);
+        Vector3 discard = new Vector3 (4,0,4);
         Card tempCard = null;
 
         //need line to update turn time on UI for player
@@ -86,71 +85,74 @@ public class Table
             {
                 for(int c = 0; c < columns; c++)
                 {
-                    if (board[r,c].Button() == true)
+                    if(board[r,c] != null)
                     {
-                        cardsClicked++;
-                        
-                        if (cardsClicked > sight)
+                        if (board[r,c].Button() == true)
                         {
-                            if(board[tRow,tColumn].Type() ==  board[r,c].Type())
+                            cardsClicked++;
+                            
+                            if (cardsClicked > sight)
                             {
-                                switch(board[r,c].Type())
+                                if(board[tRow,tColumn].Type() ==  board[r,c].Type())
                                 {
-                                    case 1:
-                                        hp += (board[tRow,tColumn].Number() + board[r,c].Number()) * multi;
-                                    break;
+                                    switch(board[r,c].Type())
+                                    {
+                                        case 1:
+                                            hp += (board[tRow,tColumn].Number() + board[r,c].Number()) * multi;
+                                        break;
 
-                                    case 2:
-                                        multi += (board[tRow,tColumn].Number() + board[r,c].Number());
-                                    break;
+                                        case 2:
+                                            multi += (board[tRow,tColumn].Number() + board[r,c].Number());
+                                        break;
 
-                                    default:
-                                        Debug.Log("invalid card type");
-                                    break;
-                                } 
+                                        default:
+                                            Debug.Log("invalid card type");
+                                        break;
+                                    } 
 
-                                board[tRow,tColumn].getGO().transform.position = discard;
-                                board[r,c].getGO().transform.position = discard;
+                                    board[tRow,tColumn].getGO().transform.position = discard;
+                                    board[r,c].getGO().transform.position = discard;
 
-                                board[tRow,tColumn]=null;
-                                board[r,c]=null;
+                                    board[tRow,tColumn]=null;
+                                    board[r,c]=null;
 
-                                score += 100 * multi;
+                                    score += 100 * multi;
+                                }
+                                else
+                                {
+                                    board[tRow,tColumn].ButtonFlip();
+                                    board[r,c].ButtonFlip();
+
+                                    hp -= 10;
+                                }
+
+                                //need to fix this to some vaule i can change
+                                turnTime = 5;
                             }
+                        
                             else
                             {
-                                board[tRow,tColumn].ButtonFlip();
-                                board[r,c].ButtonFlip();
+                                tRow = r;
+                                tColumn = c;
 
-                                hp -= 10;
                             }
-
-                            //need to fix this to some vaule i can change
-                            turnTime = 5;
-                            
                         }
-                        else
-                        {
-                            tRow = r;
-                            tColumn = c;
-
-                        }
-
-                    }
+                   }
                 }
             }
+        
+
         }
         else
         {
             hp -= 10;
             turnTime = 5;
         }
-
         //CODE FOR SHIFTING CARDS DOWN AND DEALING 
         //WOULD LIKE SOME WAY OF ANIMATING CARD MOVMENT 
         //if board spot is empty, copy card above it and remove that card, move back to new empty slot to check for cards above it 
         //MIGHT MAKE BUG WHERE GOES OFF THE END OF ARRAY AT TOP
-
+        /*
         for(int c = 0; c < columns; c++)
         {
             for(int r = 1; r < rows; r++)
@@ -160,22 +162,22 @@ public class Table
                 {
                     board[r,c] = board[r-1,c];
                     board[r-1,c] = null;
-                    board[r,c].getGO().transform.position = new Vector3((posX + offset * c), 0 ,(posY + offset * c));
+                    board[r,c].getGO().transform.position = new Vector3((posY + offset * c), 0 ,(posX + offset * r));
                     r = r-2;
                 }
 
             }
         }
-
+        */
         //goes bottom up in columb through rows, checks if spot is empty, is so deal card 
         for(int c = 0; c < columns; c++)
         {
             for(int r = rows-1; r >= 0; r--)
             {
-                if(board[r,c] == null)
+                if(board[r,c] == null && tableDeck.getCardCount() >= 0)
                 {
                     board[r,c] = tableDeck.deal();
-                    board[r,c].getGO().transform.position = new Vector3((posX + offset * c), 0 ,(posY + offset * c));
+                    board[r,c].getGO().transform.position = new Vector3((posY + offset * c), 0 ,(posX + offset * r));
                 }
 
             }
@@ -189,7 +191,7 @@ public class Table
 
 
     //NEEDS TO CHECK IF LIFE IS BELOW 0 OR IF THERE ARE NO MORE CARDS 
-    public bool checkGameOver(ref bool Win1)
+    public bool checkGameOver(ref bool Win1, ref bool Win2)
     {
         int DeckSize = tableDeck.getCardCount();
         bool fieldEmpty = false;
@@ -232,6 +234,7 @@ public class Table
                 gameOver = true;
                 Debug.Log("Game Over");
                 Debug.Log("no more hp");
+                Win2 = true;
             }
 
 
@@ -240,6 +243,23 @@ public class Table
         
 
         return (gameOver);
+    }
+
+
+
+    public int Score()
+    {
+        return(score);
+    }
+
+    public int Multi()
+    {
+        return(multi);
+    }
+
+    public int Hp()
+    {
+        return(hp);
     }
     
 

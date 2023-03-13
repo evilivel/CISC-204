@@ -33,7 +33,7 @@ public class Deck
     
     }
 
-    public Deck(Canvas canvas)
+    public Deck(Canvas canvas,Object texture)
     {
         Object[] textures = Resources.LoadAll("cards", typeof(Texture2D));
         deck = new Card[60];
@@ -55,6 +55,7 @@ public class Deck
         for (int c = 0; c < 60; c++)
         {
             deck[c] = new Card(textures[c],canvas);
+            deck[c].Back(texture);
             
             Debug.Log(c);
 

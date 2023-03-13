@@ -18,13 +18,15 @@ public class Main : MonoBehaviour
     public GameObject winMenu;
     public GameObject loseMenu;
 
+    public Object texture;
+
 
     // Start is called before the first frame update
     void Start()
     {
         GameEnded = false;
         canvas = gameObject.GetComponent<Canvas>();
-        currentTable = new Table(canvas);
+        currentTable = new Table(canvas,texture);
 
     }
 
@@ -34,7 +36,7 @@ public class Main : MonoBehaviour
       
       currentTable.turncheck();
       
-      if(currentTable.checkGameOver(ref Win1) == true)
+      if(currentTable.checkGameOver(ref Win1, ref Win2) == true)
       {
         //Debug.Log("Game Over");
         GameEnded = true;
