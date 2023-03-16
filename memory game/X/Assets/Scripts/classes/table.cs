@@ -90,9 +90,11 @@ public class Table
                         if (board[r,c].Button() == true)
                         {
                             cardsClicked++;
+
                             
                             if (cardsClicked > sight)
                             {
+
                                 if(board[tRow,tColumn].Type() ==  board[r,c].Type())
                                 {
                                     switch(board[r,c].Type())
@@ -109,6 +111,7 @@ public class Table
                                             Debug.Log("invalid card type");
                                         break;
                                     } 
+                                    System.Threading.Thread.Sleep(1000);
 
                                     board[tRow,tColumn].getGO().transform.position = discard;
                                     board[r,c].getGO().transform.position = discard;
@@ -120,6 +123,7 @@ public class Table
                                 }
                                 else
                                 {
+                                    System.Threading.Thread.Sleep(1000);
                                     board[tRow,tColumn].ButtonFlip();
                                     board[r,c].ButtonFlip();
 

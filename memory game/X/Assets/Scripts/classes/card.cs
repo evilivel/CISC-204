@@ -12,7 +12,8 @@ public class Card
     private int type;
     private int number;
 
-    private GameObject back;
+    private Sprite back;
+    private Sprite front;
     private GameObject GO;
     private bool buttonPressed;
 
@@ -115,16 +116,21 @@ public class Card
         trans.sizeDelta= new Vector2(115, 155); // custom size
         trans.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
+        
+
         Image image = imgObject.AddComponent<Image>();
         Texture2D tex = (Texture2D)texture;
-        image.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        front = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        image.sprite = front;
         imgObject.transform.SetParent(canvas.transform);
-
-       
-
-        back = imgObject;
+        
 
         GO = imgObject;
+       
+
+        //back = imgObject;
+
+        
 
 
         
@@ -159,9 +165,12 @@ public class Card
 
     public void Back(Object texture)
     {
-        Image image = back.GetComponent<Image>();
+        //Image image = back.GetComponent<Image>();
         Texture2D tex = (Texture2D)texture;
-        image.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        back = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+
+        Image image = GO.GetComponent<Image>();
+        image.sprite = back;
 
         //GO.SetActive(false);
         //back.SetActive(true);
@@ -188,17 +197,22 @@ public class Card
     {
         if (buttonPressed == true)
         {
-            System.Threading.Thread.Sleep(1000);
+            //System.Threading.Thread.Sleep(1000);
+            
+            Image image = GO.GetComponent<Image>();
+            image.sprite = back;
+            Debug.Log("card back");
+            
             buttonPressed = false;
-            //GO.SetActive(false);
-            back.SetActive(true);
         }
         else
         {
+            
+            Image image = GO.GetComponent<Image>();
+            image.sprite = front;
+            Debug.Log("card front");
+            
             buttonPressed = true;
-            Debug.Log(number);
-
-            back.SetActive(false);
             
         }
     }
