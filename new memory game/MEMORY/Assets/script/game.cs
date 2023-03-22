@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
+
+
 
 public class game : MonoBehaviour
 {
-    //add 12 public gameobjects to be added to an array to manage cards in a matching game
+    //CARDS
     public GameObject card1;
     public GameObject card2;
     public GameObject card3;
@@ -29,6 +34,14 @@ public class game : MonoBehaviour
     private bool reseting;
 
     
+    public TextMeshProUGUI scoreText;
+    private int score;
+
+    //reset button to restart the game
+    //public button resetButton;
+
+
+    
 
 
 
@@ -39,7 +52,8 @@ public class game : MonoBehaviour
 
     void Start()
     {
-        //use card gameobjects to make cars useing card constuctor with numbers 1-12
+        
+        //use card gameobjects to make cars useing card constuctor with numbers 1-6
         Card Card1 = new Card(1, card1);
         Card Card2 = new Card(1, card2);
         Card Card3 = new Card(2, card3);
@@ -144,6 +158,13 @@ public class game : MonoBehaviour
             }
 
         }
+        //if score negative, change the score to 0
+        if (score < 0)
+        {
+            score = 0;
+        }
+
+        scoreText.text = score.ToString();
 
 
 
@@ -153,7 +174,7 @@ public class game : MonoBehaviour
 
     private IEnumerator resetCard(Card c,Card c1)
     {
-
+        score -= 10;
         yield return new WaitForSeconds(1);
         c.getGO().SetActive(false);
         c1.getGO().SetActive(false);
@@ -163,6 +184,7 @@ public class game : MonoBehaviour
 
     private IEnumerator removeCard()
     {
+        score += 100;
 
         yield return new WaitForSeconds(1);
 
