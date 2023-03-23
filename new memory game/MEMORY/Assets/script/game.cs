@@ -158,6 +158,8 @@ public class game : MonoBehaviour
             }
 
         }
+
+        
         //if score negative, change the score to 0
         if (score < 0)
         {
