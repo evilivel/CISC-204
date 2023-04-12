@@ -6,6 +6,7 @@ public class PlatformerPlayer : MonoBehaviour
 {
     public float speed = 4.5f;
     public float jumpForce =12.0f;
+    private bool grounded;
 
     private Rigidbody2D body;
     private BoxCollider2D box;
@@ -25,7 +26,7 @@ public class PlatformerPlayer : MonoBehaviour
         float deltaY = body.velocity.y;
 
         anim.SetFloat("speed", Mathf.Abs(deltaX));
-        anim.SetFloat("jump speed", Mathf.Abs(deltaY));
+        anim.SetFloat("jump speed", deltaY);
         
         if (!Mathf.Approximately(deltaX, 0)) 
         {
@@ -42,7 +43,8 @@ public class PlatformerPlayer : MonoBehaviour
         Vector2 corner2 = new Vector2(min.x, min.y - .2f);
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
 
-        bool grounded = false;
+        grounded = false;
+
         if (hit != null)
         {
             grounded = true;
@@ -56,5 +58,6 @@ public class PlatformerPlayer : MonoBehaviour
         {
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
+
     }
 }
