@@ -30,7 +30,7 @@ public class PlatformerPlayer : MonoBehaviour
         
         if (!Mathf.Approximately(deltaX, 0)) 
         {
-        transform.localScale = new Vector3(Mathf.Sign(deltaX), 1, 1); 
+            transform.localScale = new Vector3(Mathf.Sign(deltaX), 1, 1); 
         }
 
         
